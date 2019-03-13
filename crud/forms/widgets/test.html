@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"     
+      layout:decorator="layout">
+	<head><meta charset="UTF-8"/></head>
+  <body>
+		<div layout:fragment="content">
+			<div th:include="fragments/loading :: loadingFragment"/>		
+			<h4 class="page-header" >
+           	<span th:text="#{polizas.busqueda}"/>
+            <small><span/></small>
+        </h4>
+		
+		
+			 <section class="content">
+			 	 <div class="row">
+         	<div class="col-xs-12">
+           	<div class="box">
+           		<div class="box-header">
+								 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">				
+						        <div class="panel panel-default" id="seccionFiltro">
+						            <div class="panel-heading" role="tab" id="headingOne">
+						                <h4 class="panel-title">	               
+						                    <a role="button"  data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						                        <i class="glyphicon glyphicon-minus" ></i>	 
+						                        <span th:text="#{inbox.filtros}"></span> 
+						                        <small><span>Clic para ocultar/mostrar</span></small>                          
+						                    </a>
+						                </h4>
+						            </div>
+						            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+						            		<div  th:if="${error != null}" class="alert alert-error fade in">
+														    <a href="#" class="close" data-dismiss="alert">&times;</a>
+														    <span  th:text="${error}"></span>
+														</div>	
+						                <div class="panel-body">
+						                     <form role = "form" action="#" th:action="@{/polizas/buscar}" th:object="${filtro}"  method="POST" id="filtroForm">					
+																		<div id="filtros">				
+																			<div class="row">		
+																		  	<div class = "form-group col-sm-2" >		   		
+																		      <label for = "ramo" class="input-sm" th:text="#{inbox.ramo}">Name</label>
+																		      <select class = "form-control input-sm" id="ramo" th:field="*{ramo}" >
+																		         <option value="AUTOS">AUTOS</option>
+																		         <option value="DANIOS">DA&Ntilde;OS</option>
+																		         <option value="VIDA">VIDA</option>			         
+																		      </select>						      			     
+																		    </div>
+																		    
+																		    <!-- Date dd/mm/yyyy -->
+		                                    <div class="form-group col-sm-2">
+		                                        <label for = "fecha1" class="input-sm" th:text="#{inbox.fechacreacion.entre}">Name</label>
+		                                        <div class="input-group">
+		                                            <div class="input-group-addon">
+		                                                <i class="fa fa-calendar"></i>
+		                                            </div>
+		                                            <input type ="text" class = "form-control input-sm datepicker" data-date-format="dd/mm/yyyy" 
+																			      			 th:field="*{fechaIni}" id = "fecha1" placeholder="dd/mm/yyyy"/>
+		                                        </div><!-- /.input group -->
+		                                    </div><!-- /.form group -->
+		                                    
+		                                     <!-- Date dd/mm/yyyy -->
+		                                    <div class="form-group col-sm-2">
+		                                        <label for = "fecha2" class="input-sm" th:text="#{inbox.fechacreacion.hasta}">Name</label>
+		                                        <div class="input-group">
+		                                            <div class="input-group-addon">
+		                                                <i class="fa fa-calendar"></i>
+		                                            </div>
+		                                            <input type ="text" class = "form-control input-sm datepicker" data-date-format="dd/mm/yyyy" 
+																			      			 th:field="*{fechaFin}" id = "fecha2" placeholder="dd/mm/yyyy"/>
+		                                        </div><!-- /.input group -->
+		                                    </div><!-- /.form group -->
+		                                    
+		                                    <div class = "form-group col-sm-3">		
+																		      <label for = "name" class="input-sm" th:text="#{inbox.poliza}">Name</label>
+																		      <input type = "text" class = "form-control input-sm" id = "numeroPoliza" 
+																		      			  th:field="*{numeroPoliza}" placeholder = "Solo la parte BBBBB (AA-BBBBB-CC)"/>     
+																		    </div>
+																		    													  																		   
+																		    <div class = "form-group col-sm-3">		
+																		      <label for = "name" class="input-sm" th:text="#{inbox.cotizacion}">Name</label>
+																		      <input type = "text" class = "form-control input-sm" id = "numCotizacion" 
+																		      			  th:field="*{numCotizacion}" placeholder = "N&uacute;mero cotizaci&oacute;n"/>     
+																		    </div>
+																			</div>						
+																			<div class="row">													    
+															    			  <div class = "col-sm-offset-10">
+															    			  	<button type = "button" class = "btn btn-default btn-sm" onclick="limpiarForma('filtroForm')">Limpiar</button>
+															         			<button type = "submit" class = "btn btn-default btn-sm ">Buscar</button>
+															      			</div>      		
+															  	   	</div>
+														   			</div>
+																	</form>
+						                </div>
+						            </div>
+						        </div>								
+								</div>						
+							</div>
+							<div class="box-body table-responsive">
+							<table width="100%" class="table table-bordered table-hover" id="inboxPol" cellspacing="0">
+				       	<thead>
+					        <tr>	   
+					        		<th th:text="#{inbox.id}">id</th>
+				           		<th th:text="#{inbox.poliza}">Poliza</th>
+				           		<th th:text="#{inbox.fechaIniVigencia}" >id</th>
+					        		<th th:text="#{inbox.fechaFinVigencia}">id</th>			
+				              <th th:text="#{inbox.cliente}">Cliente</th>
+				              <th th:text="#{inbox.primaTotal}">Prima Total</th>
+				              <th th:text="#{inbox.estatus}">Estatus</th>
+				              <th th:text="#{inbox.usuario}" >Usuario</th>
+				              <th th:text="#{inbox.fechaCreacion}" >Fecha</th>
+											<th th:text="#{inbox.cotizacion}">Cotizacion</th>
+											<th th:text="#{inbox.acciones}">Controles</th>
+					        </tr>
+				        </thead>
+				        <tbody>
+				        	<tr th:each="pol : ${polizas}">  
+				        		<td th:text="${pol.id}">id</td>      	      
+				            <td th:text="${pol.numPolizaFormato}">poliza</td>
+				            <td th:text="${pol.vigenciaIniStr}">id</td> 
+				        		<td th:text="${pol.vigenciaFinStr}" >id</td>     
+				            <td th:text="${pol.nombreCliente}?:'NA'" >cliente</td>
+				            <td th:text="${pol.primaTotal}" >prima</td>
+				            <td th:text="${pol.descripcionEstatus}" >01/05/2017</td>         
+				            <td th:text="${pol.usuarioCreacion}">usuario</td>
+				            <td th:text="${pol.fechaCreacionStr}">fecha</td>
+				            <td th:text="${pol.numCotizacion}">cotizacion</td>            
+				            <td class="acciones">				            						            		
+				            		<a th:href="@{/impresion/getpdf/{prd}/{type}/{identificador}(prd=${pol.idProducto},type='POLIZA', identificador=${pol.id})}" href="javascript:void(0);"  target="_blank">
+				            			<i class="fa fa-print" aria-hidden="true" title="Imprimir P&oacute;liza"></i>
+				            		</a>
+				            		<a href="javascript:void(0);" th:onclick="|mostrarRecibos('${pol.id}', '${pol.numPolizaFormato}')|"  data-toggle="modal" data-target="#recibosModal">
+				            			<i class="fa fa-usd" aria-hidden="true" title="Recibos"></i>
+				            		</a>	
+				            		<a th:href="@{/polizas/correos/{poliza}/{asegurado}/{cotizacionId}/{prdId}/{flRamo}/{flFecIni}/{flFecFin}/{flNumPol}/{flNumCot}
+				            		(poliza=${pol.numPolizaFormato},asegurado=${pol.nombreCliente},cotizacionId=${pol.id},prdId=${pol.idProducto},
+				            		flRamo=${filtro.ramo}, 
+				            		flFecIni=${filtro.fechaIni}?:'nulo',
+				            		flFecFin=${filtro.fechaFin}?:'nulo',
+				            		flNumPol=${filtro.numeroPoliza}?:'nulo',
+				            		flNumCot=${filtro.numCotizacion}?:'nulo'
+				            		)} " >
+				            			<i class="fa fa-envelope" aria-hidden="true" title="Enviar P&oacute;liza"></i>
+				            		</a>							            		
+				            </td>
+				        	</tr>
+				        </tbody>       
+				    	</table>
+				    	</div>
+				    </div>
+				   </div>
+				  </div>				 
+    	</section>
+   	
+			<a th:href="@{/impresion/getpdf/31/POLIZA/1644095}" href="javascript:void(0);"  target="_blank">
+                     <i class="fa fa-print" aria-hidden="true" title="Imprimir P&oacute;liza"></i>
+                </a>
+          <a th:href="@{/impresion/getpdf/31/COTIZACION/4502946}" href="javascript:void(0);"  target="_blank">
+                     <i class="fa fa-print" aria-hidden="true" title="Imprimir Cotizaci&oacute;n"></i>
+                </a> 
+          <a th:href="@{/impresion/getcondiciones/AUTOS}" href="javascript:void(0);"  target="_blank">
+                     <i class="fa fa-print" aria-hidden="true" title="Condiciones Generales"></i>
+                </a> 
+			
+		<!-- Modal -->
+		<div class="modal fade" id="recibosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">		    	
+		      <div class="modal-header">
+		        <h4 class="modal-title" id="recibosModalHeader"></h4>
+		        	<div class="pull-right">
+		        		<a th:href="@{/polizas/recargar/lista/{flRamo}/{flFecIni}/{flFecFin}/{flNumPol}/{flNumCot}
+						      (
+						      flRamo=${filtro.ramo}, 
+				       		flFecIni=${filtro.fechaIni}?:'nulo',
+				       		flFecFin=${filtro.fechaFin}?:'nulo',
+				       		flNumPol=${filtro.numeroPoliza}?:'nulo',
+				       		flNumCot=${filtro.numCotizacion}?:'nulo'
+						      )}" class="btn btn-default btn-sm" th:text="#{btn.cerrar}">
+				      	</a>
+		        	</div>			       				   
+		      </div>
+		      <div id="modalBody" class="modal-body">
+		      	<div id="msgRespuesta"></div>
+			      <table width="100%" class="table table-bordered table-hover" id="inboxRecibos" cellspacing="0">
+			       	<thead>
+				        <tr>	   
+				        	  <th th:text="#{recibo.id}">id</th>
+				        	  <th th:text="#{recibo.progPago}">id</th>
+				        	  <th th:text="#{recibo.folio}">id</th>
+				        		<th th:text="#{recibo.consecutivo}">id</th>
+			           		<th th:text="#{recibo.desde}"></th>
+			           		<th th:text="#{recibo.hasta}" >id</th>
+				        		<th th:text="#{recibo.vencimiento}">id</th>			
+			              <th th:text="#{recibo.situacion}">Cliente</th>
+			              <th th:text="#{recibo.primatotal}">Prima Total</th>
+			              <th th:text="#{recibo.tipo}">Estatus</th>
+			              <th th:text="#{recibo.fiscal}" >fiscal</th>			              
+			              <th th:text="#{recibo.xml}" >xml</th>
+						  			<th th:text="#{recibo.correo}" >sendTickets</th>
+				        </tr>
+			        </thead>
+			        <tbody id="listRecibos">				        	
+			        </tbody>       
+			    	</table>
+			    	<div class="progress">
+		          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" id="progressRecibosModal" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+		            <span class="sr-only"></span>
+		          </div>
+		        </div>
+			       <form id="datosEnviarRecibos" action="#" name="recibs">  
+									<div id="enviarReciboMail" class="col-pl-0">
+										<table>
+											<tr>
+												<td><input type="hidden" id="llaveReciboCorreo" /></td>
+												<td><input id="mailEnviarRecibos" type="text" style="border-color: #ff0000;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);" placeholder="Email" class="form-control input-sm col-md-0" required="true" /></td>
+												<td><button type="button" onclick="procesarEnvioRecibos();" th:text="#{btn.recibo.enviar}" id="btnSendRecibs" name="sendReceipts" class = "btn btn-default btn-sm ">Send</button></td>
+											</tr>
+										</table>
+            				<div id="feedback" ></div>
+					       	</div>
+						</form>  	
+		      </div>
+		    </div>
+		  </div>
+		</div>
+			
+   
+   	<script th:src="@{/js/plugins/bootstrapdatepicker/bootstrap-datepicker.js}" type="text/javascript" ></script>         
+      
+      <!-- Data tables -->
+  	<script th:src="@{/js/plugins/datatables/datatables.min.js}" type="text/javascript" ></script>	   
+    <script th:src="@{/js/plugins/dtplugin/datetime.js}" type="text/javascript" ></script>      
+    <script th:src="@{/js/inbox/init.tables.js}" type="text/javascript" ></script>
+    <script th:src="@{/js/inbox/poliza.js?version=1.0.30}" type="text/javascript" ></script>
+
+		<script th:inline="javascript">
+      			/*<![CDATA[*/       		      
+						$(document).ready(function() {
+							$('.datepicker').datepicker({language:'es'});						
+							$('#inboxPol').DataTable({
+								"bPaginate": true,
+                 "bLengthChange": true,
+                 "bFilter": true, 
+                 "bSort": true,
+                 "bInfo": true,
+                 "bAutoWidth": true,										
+								"columnDefs": [ 
+			            {
+			                "targets": [0],
+			                "visible": false,
+			                "searchable": false
+			            },
+									{
+											"targets": [2],
+											"type": "date"																						
+									},
+									{
+											"targets": [3],
+											"type": "date"																						
+									},
+									{
+											"targets": [5],
+											"type": "numeric-comma",	
+											render: $.fn.dataTable.render.number( ',', '.', 2, '$' )										
+									},
+									{
+											"targets": [8],
+											"type": "date"																						
+									},
+									{
+			                "targets": [ 10 ],		                
+			                "searchable": false,
+											"orderable": false
+			            }
+								
+								]
+							});
+							$('#seccionFiltro').on('shown.bs.collapse', function () {
+   							$(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+							});
+							$('#seccionFiltro').on('hidden.bs.collapse', function () {
+							   $(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+							});
+						});
+						
+							/*]]>*/			
+			</script>
+	</div>
+	</body>
+</html>
